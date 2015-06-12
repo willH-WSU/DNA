@@ -1,0 +1,29 @@
+#!/usr/bin/env python3
+
+import sys
+
+
+def printUsage():
+    print('Usage: duplicateSequence sequence length')
+    exit()
+
+
+# Parse command line arguments
+sequence = ''
+length = 0
+
+if len(sys.argv) < 2:
+    printUsage()
+else:
+    sequence = sys.argv[1]
+    length = int(sys.argv[2])
+
+output = ''
+
+while len(output) < length:
+    output += sequence
+
+# Trim any trailing chars that are longer than 'length'
+output = output[0:length]
+
+print(output)

@@ -1,0 +1,30 @@
+#!/usr/bin/env python3
+
+import collections
+import sys
+
+PRETTY_PRINT = False
+
+def printUsage():
+    print('./histogram [filename]')
+
+# Get the filename from the command line
+if len(sys.argv) == 2:
+    s1FileName = sys.argv[1]
+else:
+    printUsage()
+
+# Create a histogram of every character in the given file
+histogram = collections.Counter()
+
+for line in open(s1FileName, 'r'):
+    # for char in line.strip('\n'):  # Strip newlines
+    for char in line:
+        histogram[char] += 1
+
+# Output
+if PRETTY_PRINT:
+    for symbol, value in histogram.most_common():
+        print(symbol, value)
+else:
+    print(histogram.most_common())

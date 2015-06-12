@@ -1,0 +1,17 @@
+#!/usr/bin/env python3
+
+# alphabet = {'A': '00', 'C': '01', 'G': '10', 'T': '11'}
+
+symbol = ['A', 'C', 'G', 'T']
+encoding = ['00', '01', '10', '11']
+
+for i in range (0, 4):
+    for j in range (0, 4):
+        for k in range (0, 4):
+            for l in range (0, 4):
+                # Print:  DNA	Binary	Decimal	ASCII
+                print(
+                    symbol[i] + symbol[j] + symbol[k] + symbol[l],
+                    encoding[i] + encoding[j] + encoding[k] + encoding[l],
+                    eval('0b' + encoding[i] + encoding[j] + encoding[k] + encoding[l]),
+                    chr(eval('0b' + encoding[i] + encoding[j] + encoding[k] + encoding[l])))

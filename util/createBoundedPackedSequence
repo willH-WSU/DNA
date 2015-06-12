@@ -1,0 +1,32 @@
+#!/usr/bin/env python3
+"""
+Output a 'packed' string of 4-symbol DNA blocks from 'AGAA' to 'CTTG'.
+"""
+
+import random
+import sys
+
+
+def printUsage():
+    print('Usage: createBoundedPackedSequence length')
+    exit()
+
+
+# Parse command line arguments
+ASCII_LOW = 32
+ASCII_HIGH = 126
+BLOCK_SIZE = 4
+length = 125000  # Default:  125,000 = 500,000 / 4
+
+if len(sys.argv) <= 1:
+    printUsage()
+else:
+    length = int(sys.argv[1])
+
+output = ''
+
+for i in range(0, length):
+    output += chr(random.randint(ASCII_LOW, ASCII_HIGH))
+
+print(output)
+

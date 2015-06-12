@@ -1,0 +1,32 @@
+#!/usr/bin/env python3
+
+from dna import *
+import sys
+
+
+def printUsage():
+    print('Usage: dna s1_file_name s2_file_name')
+    exit()
+
+
+# Parse command line arguments
+s1FileName = ''
+s2FileName = ''
+
+
+if len(sys.argv) <= 2:
+    printUsage()
+else:
+    s1FileName = sys.argv[1]
+    s2FileName = sys.argv[2]
+
+# Read in s1
+s1 = ''
+for line in open(s1FileName, 'r'):
+    s1 += line
+
+# Unpack s1
+# result = dna.unpack(s1)
+
+# Output results
+print(result)

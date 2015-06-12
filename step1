@@ -1,0 +1,115 @@
+#!/usr/bin/env python3
+
+"""
+Given two sequences, ensure they are the same length (pad the shorter sequence
+with 'A's if necessary, pack both sequences, write out both packed sequences
+so they can be compressed (TODO: maybe automate this), and output some statistics.
+"""
+
+
+from dna import *
+import sys
+import time
+
+
+SKIP_WRITES = False	# Have to touch the file system to read in the data anyway, writes
+			# do not add much time to the total execution (only ~1 second).
+
+
+def printUsage():
+    print('Usage: dna s1_file_name s2_file_name')
+    exit()
+
+
+# Parse command line arguments
+s1FileName = ''
+s2FileName = ''
+
+if len(sys.argv) <= 2:
+    printUsage()
+else:
+    s1FileName = sys.argv[1]
+    s2FileName = sys.argv[2]
+
+# Time program execution
+startTime = time.time()
+
+# Read in s1
+s1 = ''
+for line in open(s1FileName, 'r'):
+    s1 += line
+
+# Read in s2
+s2 = ''
+for line in open(s2FileName, 'r'):
+    s2 += line
+
+# Remove any newline chars
+s1 = s1.strip('\n')
+s2 = s2.strip('\n')
+
+# Determine which sequence (s1, s2) is longest
+# and ensure it is a multiple of the dna.WORD_SIZE
+lengthS1 = len(s1)
+lengthS2 = len(s2)
+
+# s1 is longer...
+if lengthS1 > lengthS2:
+    if lengthS1 % dna.WORD_SIZE > 0:
+        s1 = dna.pad(s1)
+# s2 is longer...
+elif lengthS2 > lengthS1:
+    if lengthS2 % dna.WORD_SIZE > 0:
+        s2 = dna.pad(s2)
+# s1 and s2 are the same length...
+elif lengthS1 == lengthS2 and lengthS1 % dna.WORD_SIZE > 0:
+        s1 = dna.pad(s1)
+        s2 = dna.pad(s2)
+
+# Recalculate lengths
+lengthS1 = len(s1)
+lengthS2 = len(s2)
+
+# Pad shorter sequence (if necessary)
+if lengthS1 > lengthS2:
+    s2 = dna.padLength(s2, lengthS1)
+elif lengthS2 > lengthS1:
+    s1 = dna.padLength(s1, lengthS2)
+
+# 's1' and 's2' are now ready to be treated as 'topTape' and 'bottomTape' ('a||b')
+
+# Compute the various values required to calcuate the mutual information rate of 's1' and 's2'
+s1Packed = dna.pack(s1)
+s2Packed = dna.pack(s2)
+
+# Create a packed version of a two-tape Turing machine using 's1' and 's2'
+tape = dna.interleave(s1, s2)
+tapePacked = dna.pack(tape)
+
+# Write out packed files
+if not SKIP_WRITES:
+    s1PackedFileName = s1FileName.split('.')[0]+'Packed.'+s1FileName.split('.')[1]
+    s2PackedFileName = s2FileName.split('.')[0]+'Packed.'+s2FileName.split('.')[1]
+
+    f = open(s1PackedFileName, 'w')
+    f.write(s1Packed)
+    f.close()
+
+    f = open(s2PackedFileName, 'w')
+    f.write(s2Packed)
+    f.close()
+
+    f = open('packedTape.txt', 'w')
+    f.write(tapePacked)
+    f.close
+
+# Output results
+print('|alpha| =', len(s1))
+print('|beta| =', len(s2))
+print('|alpha||beta| =', len(tape))
+
+print('|\hat{alpha}| =', len(s1Packed))
+print('|\hat{beta}| =', len(s2Packed))
+print('|\hat{alpha||beta}| =', len(tapePacked))
+
+print('Execution time %s seconds' % round((time.time() - startTime), 2))
